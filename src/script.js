@@ -8,60 +8,31 @@ var window_width = window.innerWidth;
 canvas.width = window_width;
 canvas.height = window_height;
 
-canvas.style.background = '#bbf';
+canvas.style.background = '#ddf';
 
-class Circle {
-    constructor(xpoint, ypoint, radius, color) {
-        this.xpoint = xpoint;
-        this.ypoint = ypoint;
-        this.radius = radius;
-        this.color = color;
-    }
+const data = [200, 150, 170, 100, 80, 50, 350, 200, 200, 230];
 
-    draw(context) {
-        context.beginPath();
-        context.arc(
-            this.xpoint,
-            this.ypoint,
-            this.radius,
-            0,
-            Math.PI * 2,
-            false
-        );
-        context.strokeStyle = 'gray';
-        context.lineWidth = 3;
-        context.fillStyle = this.color;
-        context.fill();
-        context.stroke();
-        context.closePath();
-    }
+const start_value = data[0];
+const distance = canvas.width / data.length;
+const start_point = 0;
 
-    changeColor(newColor) {
-        this.color = newColor;
-        this.draw(context);
-    }
+context.beginPath();
+context.lineWidth = 3;
+context.strokeStyle = '#f56';
 
-    clickCircle(xmouse, ymouse) {
-        const distance = Math.sqrt(
-            Math.pow(xmouse - this.xpoint, 2) +
-                Math.pow(ymouse - this.ypoint, 2)
-        );
-        if (distance < this.radius) {
-            this.changeColor('#56f');
-            return true;
-        } else {
-            this.changeColor('#f56');
-            return false;
-        }
-    }
-}
+context.moveTo(start_point, start_value);
 
-let circle = new Circle(200, 200, 100, '#f56');
-circle.draw(context);
-
-canvas.addEventListener('click', (event) => {
-    const rect = canvas.getBoundingClientRect();
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
-    circle.clickCircle(x, y);
+data.forEach((element, index) => {
+    const new_distance = start_point + distance * (index + 1);
+    context.lineTo(new_distance, element);
 });
+
+context.lineTo(canvas.width, canvas.height);
+context.lineTo(start_point, canvas.height);
+context.lineTo(start_point, start_value);
+
+context.fillStyle = 'gray';
+context.fill();
+
+context.stroke();
+context.closePath();
